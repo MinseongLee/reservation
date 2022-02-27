@@ -6,16 +6,27 @@ server:
 
 spring:
   datasource:
+    # ?autoReconnect=true
     url: jdbc:mysql://localhost:3306/reservation
     username: root
     password: 1111
+#    dbcp2:
+  # true일 경우 커넥션 풀에서 커넥션을 가져올 때 커넥션이 유효한지의 여부를 검사한다.
+#      test-on-borrow: true
+  # query
+#      validation-query: SELECT 1
+
+
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true # table info in console
     show-sql: true # table info in console
+#    database-platform: org.hibernate.dialect.MySQLDialect
+  profiles:
+    active: local
 
 # value in table
 logging:
@@ -25,3 +36,5 @@ logging:
         type:
           descriptor:
             sql: trace
+app:
+  host: http://localhost:8080
