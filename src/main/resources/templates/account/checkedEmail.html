@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: head"></head>
+<body class="bg-light">
+    <div th:replace="fragments :: main-nav"></div>
+
+    <div class="py-5 text-center" th:if="${error}">
+        <p class="lead">덱스터예약 이메일 확인</p>
+        <div class="alert alert-danger" role="alert">
+            이메일을 정확하게 입력해주세요.
+        </div>
+    </div>
+
+    <div class="py-5 text-center" th:if="${error == null}">
+        <p class="lead">덱스터예약 이메일 확인</p>
+        <h2>
+            이메일을 확인했습니다.
+            <span th:text="${name}"></span>님 가입을 축하합니다.
+        </h2>
+        <small class="text-info">지금부터 가입할 때 사용한 이메일과 패스워드로 로그인할 수 있습니다.</small>
+    </div>
+
+    <div th:replace="fragments :: footer"></div>
+</body>
+</html>

@@ -157,3 +157,8 @@ buildNumber.properties
 .classpath
 
 # End of https://www.toptal.com/developers/gitignore/api/java,maven,intellij
+
+
+## NPM
+src/main/resources/static/node_modules
+src/main/resources/static/node
