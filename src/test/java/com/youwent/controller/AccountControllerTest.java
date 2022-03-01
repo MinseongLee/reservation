@@ -19,6 +19,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static com.youwent.model.enumTypes.Url.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -33,13 +34,12 @@ public class AccountControllerTest {
     @DisplayName("회원 가입 화면 테스트")
     @Test
     void signup() throws Exception {
-        mockMvc.perform(get("/signup"))
+        mockMvc.perform(get(SIGNUP))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(view().name("account/signup"))
+                .andExpect(view().name(ACCOUNT + SIGNUP))
                 .andExpect(model().attributeExists("accountDto"))
                 .andExpect(unauthenticated());
-
     }
 
     @DisplayName("회원 가입 처리 - 입력값 오류")
@@ -47,14 +47,14 @@ public class AccountControllerTest {
     void signUpSubmit_wrong_input() throws Exception {
         // 403 에러가 났다. 왜냐하면 get요청을 하고 폼 데이터를 받을 때,
         // csrf 토큰도 함꼐 받는데, 그 토큰을 받지 못해서 유효하지 않다는 에러가 뜨는 것이다.
-        mockMvc.perform(post("/signup")
+        mockMvc.perform(post(SIGNUP)
                 .param("name", "a")
                 .param("email", "ema")
                 .param("password", "12")
                 .param("phone", "01203")
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(view().name("account/signup"))
+                .andExpect(view().name(ACCOUNT + SIGNUP))
                 .andExpect(unauthenticated());
     }
 
@@ -63,14 +63,15 @@ public class AccountControllerTest {
     void signUpSubmit_correct_input() throws Exception {
         // 403 에러가 났다. 왜냐하면 get요청을 하고 폼 데이터를 받을 때,
         // csrf 토큰도 함꼐 받는데, 그 토큰을 받지 못해서 유효하지 않다는 에러가 뜨는 것이다.
-        mockMvc.perform(post("/signup")
+        mockMvc.perform(post(SIGNUP)
                         .param("name", "dexter3")
                         .param("email", "dexlee45@gmail.com")
                         .param("password", "dexter123")
                         .param("phone", "01057642433")
+                        //form 데이터를 보낼 때에는 csrf 토큰을 항상 같이 보내야한다.
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/"))
+                .andExpect(view().name(REDIRECT + ROOT))
                 .andExpect(authenticated().withUsername("dexlee45@gmail.com"));
 
         Account account = accountRepository.findByEmail("dexlee45@gmail.com");
@@ -82,12 +83,12 @@ public class AccountControllerTest {
     @DisplayName("인증 메일 확인 - 입력값 오류")
     @Test
     void checkEmailToken_wrong_input() throws Exception {
-        mockMvc.perform(get("/emailtoken")
+        mockMvc.perform(get(EMAILTOKEN)
                 .param("token", "dfwds")
                 .param("email", "dexter@gmail.com"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("error"))
-                .andExpect(view().name("account/checkedEmail"))
+                .andExpect(view().name("account/checkedemail"))
                 .andExpect(unauthenticated());
     }
 
@@ -103,13 +104,13 @@ public class AccountControllerTest {
         account.generateEmailCheckToken();
         Account newAccount = accountRepository.save(account);
 
-        mockMvc.perform(get("/emailtoken")
+        mockMvc.perform(get(EMAILTOKEN)
                         .param("token", newAccount.getEmailCheckToken())
                         .param("email", newAccount.getEmail()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist("error"))
                 .andExpect(model().attributeExists("name"))
-                .andExpect(view().name("account/checkedEmail"))
+                .andExpect(view().name("account/checkedemail"))
                 .andExpect(authenticated());
     }
 

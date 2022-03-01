@@ -8,6 +8,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+// make user principal
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 @AuthenticationPrincipal(expression = "#this == 'anonymousUser' ? null : account")

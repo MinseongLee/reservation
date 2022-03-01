@@ -21,6 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static com.youwent.model.enumTypes.Url.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -47,24 +48,24 @@ public class MainControllerTest {
     @DisplayName("이메일 로그인 성공")
     @Test
     void login_email() throws Exception {
-        mockMvc.perform(post("/login")
+        mockMvc.perform(post(ROOT+LOGIN)
                 .param("username", "dexter@gmail.com")
                 .param("password", "dexter1234")
                 .with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"))
+                .andExpect(redirectedUrl(ROOT))
                 .andExpect(authenticated().withUsername("dexter@gmail.com"));
     }
 
     @DisplayName("이메일 로그인 실패")
     @Test
     void login_fail_email() throws Exception {
-        mockMvc.perform(post("/login")
+        mockMvc.perform(post(ROOT + LOGIN)
                         .param("username", "deer@gmail.com")
                         .param("password", "dxter1234")
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/login?error"))
+                .andExpect(redirectedUrl(ROOT + LOGIN + "?error"))
                 .andExpect(unauthenticated());
     }
 
@@ -76,7 +77,7 @@ public class MainControllerTest {
         mockMvc.perform(post("/logout")
                 .with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"))
+                .andExpect(redirectedUrl(ROOT))
                 .andExpect(unauthenticated());
 
     }
