@@ -6,6 +6,8 @@ import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -20,6 +22,7 @@ public class Account extends BaseEntity {
 
     private String name;
 
+    @Enumerated(EnumType.STRING)
     private UserType userType;
 
     private String phone;

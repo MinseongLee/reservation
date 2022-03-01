@@ -19,14 +19,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.validation.Valid;
 import java.util.Optional;
 
+import static com.youwent.model.enumTypes.Url.*;
+
+
 @Controller
 @RequiredArgsConstructor
 public class AccountController {
-    private static final String ACCOUNT_SIGNUP = "account/signup";
-    private static final String ACCOUNT_CHECKEDEMAIL = "account/checkedEmail";
-    private static final String ACCOUNT_CHECKEMAIL = "account/checkEmail";
-    private static final String ACCOUNT_PROFILE = "account/profile";
-
 
     private final AccountValidator accountValidator;
     private final AccountService accountService;
@@ -38,62 +36,62 @@ public class AccountController {
     }
 
 
-    @GetMapping("/signup")
+    @GetMapping(SIGNUP)
     public String signUp(Model model) {
         model.addAttribute(new AccountDto());
-        return ACCOUNT_SIGNUP;
+        return ACCOUNT + SIGNUP;
     }
 
     // @ModelAttribute accountDto : 여기서 앞에 애노테이션은 생략 가능
-    @PostMapping("/signup")
+    @PostMapping(SIGNUP)
     public String createAccount(@Valid AccountDto accountDto, Errors errors) {
         if (errors.hasErrors()) {
-            return ACCOUNT_SIGNUP;
+            return ACCOUNT + SIGNUP;
         }
 
         Account account = accountService.processNewAccount(accountDto);
         accountService.login(account);
-        return "redirect:/";
+        return REDIRECT + ROOT;
     }
 
-    @GetMapping("/emailtoken")
+    @GetMapping(EMAILTOKEN)
     public String checkEmailToken(String token, String email, Model model) {
         Account account = accountRepository.findByEmail(email);
         if (account == null) {
             model.addAttribute("error", "wrong.email");
-            return ACCOUNT_CHECKEDEMAIL;
+            return ACCOUNT + CHECKEDEMAIL;
         }
 
         // 읽기가 쉽지 않은 논리연산은 가독성을 위해 함수로 빼놓을 것.
         if (!account.isValidToken(token)) {
             model.addAttribute("error", "wrong.token");
-            return ACCOUNT_CHECKEDEMAIL;
+            return ACCOUNT + CHECKEDEMAIL;
         }
 
         accountService.completeSignUp(account);
         model.addAttribute("name", account.getName());
-        return ACCOUNT_CHECKEDEMAIL;
+        return ACCOUNT + CHECKEDEMAIL;
     }
 
-    @GetMapping("/checkemail")
+    @GetMapping(CHECKEMAIL)
     public String checkEmail(@CurrentAccount Account account, Model model) {
         model.addAttribute("email", account.getEmail());
-        return ACCOUNT_CHECKEMAIL;
+        return ACCOUNT + CHECKEMAIL;
     }
 
-    @GetMapping("/resendemail")
+    @GetMapping(RESENDEMAIL)
     public String resendConfirmEmail(@CurrentAccount Account account, Model model) {
         if (!account.canSendConfirmEmail()) {
             model.addAttribute("error", "인증 이메일은 5분에 한 번만 전송할 수 있습니다.");
             model.addAttribute("email", account.getEmail());
-            return ACCOUNT_CHECKEMAIL;
+            return ACCOUNT + CHECKEMAIL;
         }
 
         accountService.sendSignUpConfirmEmail(account);
-        return "redirect:/";
+        return REDIRECT + ROOT;
     }
 
-    @GetMapping("/profile/{id}")
+    @GetMapping(PROFILE + ID)
     public String accountDetail(@PathVariable Long id, Model model, @CurrentAccount Account account) {
         Optional<Account> accountById = accountRepository.findById(id);
         if (!accountById.isPresent()) {
@@ -104,7 +102,7 @@ public class AccountController {
         model.addAttribute("account", accountById.get());
         // 현재 접속한 계정의 오너인지
         model.addAttribute("isOwner", accountById.get().equals(account));
-        return ACCOUNT_PROFILE;
+        return ACCOUNT + PROFILE;
     }
 
 }

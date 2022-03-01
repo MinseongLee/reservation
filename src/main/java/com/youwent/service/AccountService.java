@@ -3,14 +3,15 @@ package com.youwent.service;
 import com.youwent.config.AppProperties;
 import com.youwent.entity.account.Account;
 import com.youwent.entity.account.AccountDto;
+import com.youwent.entity.account.Profile;
 import com.youwent.entity.account.UserAccount;
-import com.youwent.mail.EmailMessage;
 import com.youwent.mail.ConsoleMailSender;
+import com.youwent.mail.EmailMessage;
 import com.youwent.mail.EmailService;
 import com.youwent.model.enumTypes.UserType;
 import com.youwent.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,9 +37,11 @@ import java.util.Arrays;
 public class AccountService implements UserDetailsService {
 
     private final AccountRepository accountRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
+
     private final EmailService emailService;
     private final ConsoleMailSender consoleMailSender;
-    private final PasswordEncoder passwordEncoder;
     private final AppProperties appProperties;
     private final TemplateEngine templateEngine;
 
@@ -103,9 +106,27 @@ public class AccountService implements UserDetailsService {
         return new UserAccount(account);
     }
 
-
+    // account entity가 영속성 상태 (persistent status) : 변경 이력을 추적해줌.
+    // 왜냐하면 accountRepository에서 가져온 객체이므로 영속성 상태로 넘어간 상태이다.
     public void completeSignUp(Account account) {
         account.completeSignup();
         login(account);
+    }
+
+    // @CurrentAccount 객체는 detached status
+    // 그래서 트랜잭션 처리는 되지만 상태 변경은 자동으로 안 된다.
+    public void updateProfile(Account account, Profile profile) {
+        //profile 프로퍼티들을 모두 account에 매핑해줌.
+        modelMapper.map(profile, account);
+        accountRepository.save(account);
+    }
+
+    public void updatePassword(Account account, String newPassword) {
+        account.setPassword(passwordEncoder.encode(newPassword));
+        accountRepository.save(account);
+    }
+
+    public void deleteAccount(Account account) {
+        accountRepository.delete(account);
     }
 }
