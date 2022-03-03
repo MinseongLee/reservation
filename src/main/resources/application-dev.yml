@@ -19,15 +19,27 @@ spring:
 
   jpa:
     hibernate:
-      # validation - 운영시 : entity들과 db 내용과 맞는지 검증 create-drop
+      # validation - 운영시 : entity들과 db 내용과 맞는지 검증
       ddl-auto: update
     properties:
       hibernate:
         format_sql: true # table info in console
     show-sql: true # table info in console
 #    database-platform: org.hibernate.dialect.MySQLDialect
-  profiles:
-    active: local
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    # the proejct email!
+    username: dexlee345@gmail.com
+    # after 2단계인증, 발급 받은 app password
+    password: zqnazeaeymknnsrw
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
 
 # value in table
 logging:
@@ -39,6 +51,3 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
-# 개발 환경에 따라 다른 host에 접근할 수 있도록.
-app:
-  host: http://localhost:8080

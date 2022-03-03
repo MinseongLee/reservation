@@ -33,7 +33,6 @@
 <script type="application/javascript">
     $(function () {
         // ajax처리할 때에도 토큰이 필요하다. 왜냐하면 html에서는 자동적으로 보내주는 것을 ajax로 통신하려면 수동으로 보내줘야한다.
-
         // ajax로 보낼 때는 csrf 토큰을 먼저 보내줘야 통신이 가능하다.
         var csrfToken = $("meta[name='_csrf']").attr("content");
         var csrfHeader = $("meta[name='_csrf_header']").attr("content");
@@ -46,7 +45,7 @@
                 type: "DELETE",
                 dataType: "json",
             }).done(function (data, status) {
-                alert(" 삭제에 성공하였습니다.");
+                alert(data.statusCode + " "+ data.resultMsg);
                 // rememberMe 때문에 해당 계정을 기억하므로,
                 // 삭제 후, logout을 해줘야 계정이 계속 살아있지 않는다.
                 $('#user-logout').trigger('click');
