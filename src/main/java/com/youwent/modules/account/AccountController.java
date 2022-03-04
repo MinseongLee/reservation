@@ -90,15 +90,11 @@ public class AccountController {
 
     @GetMapping(PROFILE + ID)
     public String accountDetail(@PathVariable Long id, Model model, @CurrentAccount Account account) {
-        Optional<Account> accountById = accountRepository.findById(id);
-        if (!accountById.isPresent()) {
-            throw new IllegalArgumentException("해당하는 사용자가 존재하지 않습니다.");
-        }
-
+        Account accountById = accountService.getAccount(id);
         // account를 줘야한다.
-        model.addAttribute("account", accountById.get());
+        model.addAttribute("account", accountById);
         // 현재 접속한 계정의 오너인지
-        model.addAttribute("isOwner", accountById.get().equals(account));
+        model.addAttribute("isOwner", accountById.equals(account));
         return ACCOUNT + PROFILE;
     }
 

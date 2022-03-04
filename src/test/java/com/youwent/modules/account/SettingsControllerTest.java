@@ -145,10 +145,4 @@ public class SettingsControllerTest {
         Account destroy = accountRepository.findByEmail("dexter@gmail.com");
         assertNull(destroy);
     }
-
-
-
-
-
-
 }

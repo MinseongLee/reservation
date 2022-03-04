@@ -75,6 +75,9 @@
 
         <ul class="navbar-nav justify-content-end">
             <li class="nav-item" sec:authorize="isAuthenticated()" th:if="${account != null && account.userType == T(com.youwent.modules.account.UserType).ADMIN}">
+                <a class="nav-link all-facility-button" th:href="@{/facility}">시설관리</a>
+            </li>
+            <li class="nav-item" sec:authorize="isAuthenticated()" th:if="${account != null && account.userType == T(com.youwent.modules.account.UserType).ADMIN}">
                 <a class="nav-link" th:href="@{/facility/form}">시설생성</a>
             </li>
             <li class="nav-item" sec:authorize="isAuthenticated()">
@@ -90,6 +93,11 @@
     <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'profile'}? active" href="#" th:href="@{/settings/profile}">프로필</a>
     <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'password'}? active" href="#" th:href="@{/settings/password}">패스워드</a>
     <a class="list-group-item list-group-item-action list-group-item-danger" th:classappend="${currentMenu == 'account'}? active" href="#" th:href="@{/settings/account}">계정</a>
+</div>
+
+<div th:fragment="facility-settings-menu (currentMenu)" class="list-group">
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'facility'}? active" href="#" th:href="@{'/facility/' + ${facility.id} + '/settings/facility'}">시설상세</a>
+    <a class="list-group-item list-group-item-action list-group-item-danger" th:classappend="${currentMenu == 'delete'}? active" href="#" th:href="@{'/facility/' + ${facility.id} + '/settings/delete'}">시설삭제</a>
 </div>
 
 <div th:fragment="footer">

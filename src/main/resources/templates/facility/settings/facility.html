@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: head"></head>
+<body class="bg-light">
+    <div th:replace="fragments :: facility-nav"></div>
+    <div class="container">
+        <div class="row mt-5 justify-content-center">
+            <div class="col-2">
+                <div th:replace="fragments :: facility-settings-menu(currentMenu='facility')"></div>
+            </div>
+            <div class="col-8">
+                <div th:if="${message}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+                    <span th:text="${message}">메시지</span>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="row">
+                    <h2 class="col-sm-12" th:text="${account.email}">dexter</h2>
+                </div>
+                <div class="row mt-3">
+                    <form class="needs-validation col-sm-10" th:action="@{'/facility/' + ${facility.id} + '/settings/facility'}" th:object="${facilityForm}" method="post" novalidate>
+                        <div class="form-group">
+                            <label for="building">건물 이름</label>
+                            <input id="building" type="text" th:field="*{building}" class="form-control"
+                                   placeholder="덱스터빌딩" aria-describedby="buildingHelp" required max="50">
+                            <small id="buildingHelp" class="form-text text-muted">
+                                50자 이내로 입력하세요.
+                            </small>
+                            <small class="invalid-feedback">건물 이름을 입력하세요.</small>
+                            <small class="form-text text-danger" th:if="${#fields.hasErrors('building')}" th:errors="*{building}">building Error</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">주소</label>
+                            <input id="address" type="text" th:field="*{address}" class="form-control"
+                                   placeholder="서울동" aria-describedby="addressHelp" required max="100">
+                            <small id="addressHelp" class="form-text text-muted">
+                                100자 이내로 입력하세요.
+                            </small>
+                            <small class="invalid-feedback">주소를 입력하세요.</small>
+                            <small class="form-text text-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">address Error</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="openTime">오픈시간</label>
+                            <input id="openTime" type="text" th:field="*{openTime}" class="form-control"
+                                   placeholder="09:30" aria-describedby="openTimeHelp" required max="100">
+                            <small id="openTimeHelp" class="form-text text-muted">
+                                형태는 00:00으로 입력해주세요. ex) 9:30
+                            </small>
+                            <small class="invalid-feedback">오픈시간을 입력하세요.</small>
+                            <small class="form-text text-danger" th:if="${#fields.hasErrors('openTime')}" th:errors="*{openTime}">openTime Error</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="closeTime">클로즈시간</label>
+                            <input id="closeTime" type="text" th:field="*{closeTime}" class="form-control"
+                                   placeholder="21:30" aria-describedby="closeTimeHelp" required max="100">
+                            <small id="closeTimeHelp" class="form-text text-muted">
+                                형태는 00:00 으로 입력해주세요. ex) 15:30
+                            </small>
+                            <small class="invalid-feedback">클로즈시간을 입력하세요.</small>
+                            <small class="form-text text-danger" th:if="${#fields.hasErrors('closeTime')}" th:errors="*{closeTime}">closeTime Error</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="maxReserveCnt">최대예약가능수</label>
+                            <input id="maxReserveCnt" type="number" th:field="*{maxReserveCnt}" class="form-control"
+                                   aria-describedby="maxReserveCntHelp" required min="1">
+                            <small id="maxReserveCntHelp" class="form-text text-muted">
+                                최소 값은 1입니다.
+                            </small>
+                            <small class="invalid-feedback">최대예약가능수를 입력하세요.</small>
+                            <small class="form-text text-danger" th:if="${#fields.hasErrors('maxReserveCnt')}" th:errors="*{maxReserveCnt}">maxReserveCnt Error</small>
+                        </div>
+
+                        <div class="form-group">
+                            <button class="btn btn-primary btn-block" type="submit"
+                                    aria-describedby="submitHelp">예약시설 수정</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div th:replace="fragments :: footer"></div>
+</body>
+</html>
