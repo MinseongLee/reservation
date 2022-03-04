@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Optional;
 
 
 @Service
@@ -18,7 +19,6 @@ import java.time.LocalTime;
 public class FacilityService {
 
     private final FacilityRepository facilityRepository;
-//    private final AccountFacilityRepository accountFacilityRepository;
     private final GlobalService globalService;
     private final ModelMapper modelMapper;
 
@@ -37,10 +37,24 @@ public class FacilityService {
                                     .account(account)
                                     .build();
 
-//        facility.addAccountFacility(account);
         Facility newFacility = facilityRepository.save(facility);
-//        newFacility.addAccountFacility(account);
-//        newFacility.addAdmin(account);
         return newFacility;
+    }
+
+    public Facility getFacility(Long id) {
+        Optional<Facility> facility = facilityRepository.findById(id);
+        if (!facility.isPresent()) {
+            throw new IllegalArgumentException("해당하는 사용자가 존재하지 않습니다.");
+        }
+        return facility.get();
+    }
+
+    // repository에서 가져온 객체(facility)이므로 영속상태이다. 그러므로 save() 불필요
+    public void updateFacility(Facility facility, FacilityForm facilityForm) {
+        modelMapper.map(facilityForm, facility);
+    }
+
+    public void deleteFacility(Facility facility) {
+        facilityRepository.delete(facility);
     }
 }

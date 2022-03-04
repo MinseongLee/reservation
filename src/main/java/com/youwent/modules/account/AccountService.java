@@ -22,6 +22,7 @@ import org.thymeleaf.context.Context;
 
 import javax.validation.Valid;
 import java.util.Arrays;
+import java.util.Optional;
 
 // repository는 디폴트로 transaction이 적용되어져 있다.
 // service는 이렇게 애노테이션을 넣어서 직접 트랜잭션을 넣어줘서 처리.
@@ -130,5 +131,17 @@ public class AccountService implements UserDetailsService {
     public void setUserType(Account account) {
         account.setUserType(UserType.ADMIN);
         accountRepository.save(account);
+    }
+
+    public Account getAccount(Long id) {
+        Optional<Account> accountById = accountRepository.findById(id);
+        if (!accountById.isPresent()) {
+            throw new IllegalArgumentException("해당하는 사용자가 존재하지 않습니다.");
+        }
+        return accountById.get();
+    }
+
+    public boolean isRealAccount(Account realAccount, Account accountById) {
+        return realAccount.equals(accountById);
     }
 }

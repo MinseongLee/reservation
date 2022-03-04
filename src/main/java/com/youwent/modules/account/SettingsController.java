@@ -1,9 +1,9 @@
 package com.youwent.modules.account;
 
-import com.youwent.modules.common.CustomResponse;
 import com.youwent.modules.account.dto.PasswordForm;
 import com.youwent.modules.account.dto.Profile;
 import com.youwent.modules.account.validator.PasswordFormValidator;
+import com.youwent.modules.common.CustomResponse;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
@@ -15,8 +15,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
-import java.util.Optional;
-
 import static com.youwent.modules.common.Url.*;
 
 @Controller
@@ -24,7 +22,6 @@ import static com.youwent.modules.common.Url.*;
 @RequestMapping(ROOT + SETTINGS)
 public class SettingsController {
 
-    private final AccountRepository accountRepository;
     private final AccountService accountService;
     private final ModelMapper modelMapper;
     private final PasswordFormValidator passwordFormValidator;
@@ -87,15 +84,11 @@ public class SettingsController {
     @DeleteMapping(ROOT + ACCOUNT + ID)
     @ResponseBody
     public CustomResponse deleteAccount(@CurrentAccount Account account, @PathVariable Long id) throws IllegalAccessException {
-        Optional<Account> accountById = accountRepository.findById(id);
-        if (!accountById.isPresent()) {
-            throw new IllegalArgumentException("해당하는 사용자가 존재하지 않습니다.");
-        }
-
-        if (!account.equals(accountById.get())) {
+        Account accountById = accountService.getAccount(id);
+        if (!accountService.isRealAccount(account, accountById)) {
             throw new IllegalAccessException("해당하는 사용자와 실제 유저와 같지 않습니다.");
         }
-        accountService.deleteAccount(accountById.get());
+        accountService.deleteAccount(accountById);
         return CustomResponse.defaultCustomResponse();
     }
 }

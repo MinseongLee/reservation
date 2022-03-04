@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: head"></head>
+<body class="bg-light">
+    <div th:replace="fragments :: facility-nav"></div>
+    <div class="container">
+        <div class="row mt-5 justify-content-center">
+            <div class="col-2">
+                <div th:replace="fragments :: facility-settings-menu(currentMenu='delete')"></div>
+            </div>
+            <div class="col-8">
+                <div class="row">
+                    <h2 class="col-sm-12" th:text="${facility.building}">building</h2>
+                </div>
+                <div class="row mt-3">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <span id="facility-id" th:text="${facility.id}" hidden></span>
+                            <h2 class="text-danger">시설 삭제</h2>
+                            <button class="btn btn-outline-danger delete-facility" type="button">시설 삭제</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div th:replace="fragments :: footer"></div>
+</body>
+</html>
+
+<script type="application/javascript">
+    $(function () {
+        var csrfToken = $("meta[name='_csrf']").attr("content");
+        var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+        });
+        $('.delete-facility').on('click', function () {
+            $.ajax({
+                url: '/facility/' + $('#facility-id').text() + '/settings/delete',
+                type: "DELETE",
+                dataType: "json",
+            }).done(function (data, status) {
+                alert(data.statusCode + " "+ data.resultMsg);
+                window.open('/facility', '_self');
+            }).fail(function (data, status){
+                alert(data.responseJSON.message);
+            });
+        });
+    });
+</script>

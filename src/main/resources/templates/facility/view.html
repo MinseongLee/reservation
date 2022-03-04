@@ -36,7 +36,7 @@
                         <span th:if="${facility.possibleReservation}">예약가능</span>
                         <span th:unless="${facility.possibleReservation}">예약불가능</span>
                     </p>
-                    <a th:href="@{'/facility/' + ${facility.id}}" class="text-decoration-none btn btn-outline-primary">
+                    <a th:href="@{'/facility/' + ${facility.id} + '/settings/facility'}" class="text-decoration-none btn btn-outline-primary">
                         시설 수정
                     </a>
                     <button class="btn btn-outline-danger delete-facility" type="button">시설 삭제</button>

@@ -12,9 +12,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
 import java.util.List;
-import java.util.Optional;
 
 import static com.youwent.modules.common.Url.*;
 
@@ -64,12 +62,9 @@ public class FacilityController {
 
     @GetMapping(ID)
     public String detailsFacility(@CurrentAccount Account account, @PathVariable Long id, Model model) {
-        Optional<Facility> facility = facilityRepository.findById(id);
-        if (!facility.isPresent()) {
-            throw new IllegalArgumentException("해당하는 사용자가 존재하지 않습니다.");
-        }
+        Facility facility = facilityService.getFacility(id);
         model.addAttribute(account);
-        model.addAttribute(facility.get());
+        model.addAttribute(facility);
         return FACILITY + VIEW;
     }
 
