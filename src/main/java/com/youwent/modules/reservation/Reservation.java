@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
-@Builder @AllArgsConstructor @NoArgsConstructor
+@NoArgsConstructor
 public class Reservation extends BaseEntity {
     private LocalDateTime reservedDate;
 
@@ -26,4 +26,31 @@ public class Reservation extends BaseEntity {
     @ManyToOne
     private Facility facility;
 
+    private void addAccount(Account account) {
+        this.account = account;
+//        this.account.getReservations().add(this);
+    }
+
+    private void addFacility(Facility facility) {
+        this.facility = facility;
+    }
+
+    @Builder
+    public Reservation(LocalDateTime reservedDate, boolean status, LocalDateTime createdDate, Account account, Facility facility) {
+        this.reservedDate = reservedDate;
+        this.status = status;
+        this.createdDate = createdDate;
+        if (account != null) addAccount(account);
+        if (facility != null) addFacility(facility);
+    }
+
+    public void reserve(LocalDateTime reserved) {
+        this.reservedDate = reserved;
+        this.status = true;
+    }
+
+    public void updateStatus() {
+        this.status = false;
+        this.facility.minusReserveCnt();
+    }
 }

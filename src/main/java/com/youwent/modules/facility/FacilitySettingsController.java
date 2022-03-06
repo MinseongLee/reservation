@@ -3,6 +3,7 @@ package com.youwent.modules.facility;
 import com.youwent.modules.account.Account;
 import com.youwent.modules.account.CurrentAccount;
 import com.youwent.modules.common.CustomResponse;
+import com.youwent.modules.facility.dto.FacilityDto;
 import com.youwent.modules.facility.dto.FacilityForm;
 import com.youwent.modules.facility.validator.FacilityFormValidator;
 import lombok.RequiredArgsConstructor;
@@ -69,5 +70,15 @@ public class FacilitySettingsController {
         Facility facility = facilityService.getFacility(id);
         facilityService.deleteFacility(facility);
         return CustomResponse.defaultCustomResponse();
+    }
+
+    @GetMapping(ROOT + RESERVATION)
+    @ResponseBody
+    public CustomResponse userReservation(@CurrentAccount Account account, @PathVariable Long id,
+                                          @RequestParam("reservationDate") String reservationDate) {
+        // format yyyy-mm-dd
+        // 여기서 validate 과 예약처리를 끝내줘야함.
+        Facility facility = facilityService.reservationFacility(id, account, reservationDate);
+        return CustomResponse.responseWithFacilityDto(FacilityDto.createFacilityDto(facility));
     }
 }

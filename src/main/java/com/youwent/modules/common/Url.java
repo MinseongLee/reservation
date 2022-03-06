@@ -25,4 +25,5 @@ public class Url {
     public static final String CHECKEMAIL = "/checkemail";
     public static final String PASSWORD = "/password";
     public static final String FORM = "/form";
+    public static final String RESERVATION = "reservation";
 }

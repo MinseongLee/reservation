@@ -11,7 +11,7 @@ import java.util.*;
 
 @Entity
 @Getter @Setter
-@AllArgsConstructor @NoArgsConstructor
+@NoArgsConstructor
 public class Account extends BaseEntity {
     @Column(unique = true)
     private String email;
@@ -33,15 +33,15 @@ public class Account extends BaseEntity {
 
     private LocalDateTime emailCheckTokenCreatedDate;
 
-    @OneToMany(mappedBy = "account")
-    private Set<Reservation> reservations = new HashSet<>();
+//    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER)
+//    private Set<Reservation> reservations = new HashSet<>();
 
 //    @OneToMany(mappedBy = "account")
 //    private Set<AccountFacility> account_facilities = new HashSet<>();
 
     // account를 넣으려 할 때, account를 매번 detached에서 persist로 변경하기 보단 eager로 처리하는게 더 효율적이라 판단
-    @ManyToMany(mappedBy = "accounts", fetch = FetchType.EAGER)
-    private Set<Facility> facilities = new HashSet<>();
+//    @ManyToMany(mappedBy = "accounts", fetch = FetchType.EAGER)
+//    private Set<Facility> facilities = new HashSet<>();
 
     public void generateEmailCheckToken() {
         this.emailCheckToken = UUID.randomUUID().toString();
@@ -73,4 +73,8 @@ public class Account extends BaseEntity {
         this.createdDate = createdDate;
         this.emailCheckTokenCreatedDate = emailCheckTokenCreatedDate;
     }
+
+//    public boolean isAdmin() {
+//        return this.userType == UserType.ADMIN;
+//    }
 }

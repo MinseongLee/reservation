@@ -5,6 +5,7 @@ import com.youwent.modules.account.dto.AccountDto;
 import com.youwent.modules.account.dto.Profile;
 import com.youwent.infra.mail.EmailMessage;
 import com.youwent.infra.mail.EmailService;
+import com.youwent.modules.reservation.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -35,6 +36,7 @@ import java.util.Optional;
 public class AccountService implements UserDetailsService {
 
     private final AccountRepository accountRepository;
+    private final ReservationRepository reservationRepository;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
     private final EmailService emailService;
@@ -124,6 +126,8 @@ public class AccountService implements UserDetailsService {
     }
 
     public void deleteAccount(Account account) {
+        // 연관된 관계 정리하지 않으면 포린키 제약 에러 발생
+        reservationRepository.deleteByAccount(account);
         accountRepository.delete(account);
     }
 
