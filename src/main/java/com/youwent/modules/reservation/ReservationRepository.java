@@ -8,9 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Transactional(readOnly = true)
-public interface ReservationRepository extends JpaRepository<Reservation, Long> {
+public interface ReservationRepository extends JpaRepository<Reservation, Long>, ReservationRepositoryExtension {
     Reservation findFirstByAccount_IdAndFacility_Id(Long account_id, Long facility_id);
     List<Reservation> deleteByFacility(Facility facility);
     List<Reservation> deleteByAccount(Account account);
-    List<Reservation> findByAccountAndStatusIsTrue(Account account);
 }

@@ -33,44 +33,12 @@
             <li class="nav-item" sec:authorize="isAuthenticated()" th:if="${account != null}">
                 <a class="nav-link" th:href="@{/facility}">시설목록</a>
             </li>
+            <li class="nav-item" sec:authorize="isAuthenticated()" th:if="${account != null && account.userType == T(com.youwent.modules.account.UserType).ADMIN}">
+                <a class="nav-link" th:href="@{/facility/form}">시설생성</a>
+            </li>
             <!--            내 예약시설 목록에서 예약 추가, 예약가능 상태인 시설과 예약이 다 찬 시설로 나눌 것-->
             <li class="nav-item" sec:authorize="isAuthenticated()" th:if="${account != null && account.userType == T(com.youwent.modules.account.UserType).USER}">
                 <a class="nav-link" th:href="@{/reservation}">내 예약시설 목록</a>
-            </li>
-            <li class="nav-item" sec:authorize="isAuthenticated()">
-                <form class="form-inline my-2 my-lg-0" action="#" th:action="@{/logout}" method="post">
-                    <button id="user-logout" class="btn btn-primary" type="submit">로그아웃</button>
-                </form>
-            </li>
-        </ul>
-    </div>
-</nav>
-
-<nav th:fragment="facility-nav" class="navbar navbar-expand-sm navbar-dark bg-dark">
-    <a class="navbar-brand" href="/" th:href="@{/}">
-        <span width="30" height="30">덱스터예약</span>
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <form th:action="@{/search/facility}" class="form-inline" method="get">
-                    <input class="form-control mr-sm-2" name="keyword" type="search" placeholder="시설 찾기"
-                           aria-label="Search"/>
-                </form>
-            </li>
-        </ul>
-
-        <ul class="navbar-nav justify-content-end">
-            <li class="nav-item" sec:authorize="isAuthenticated()" th:if="${account != null && account.userType == T(com.youwent.modules.account.UserType).ADMIN}">
-                <a class="nav-link all-facility-button" th:href="@{/facility}">시설관리</a>
-            </li>
-            <li class="nav-item" sec:authorize="isAuthenticated()" th:if="${account != null && account.userType == T(com.youwent.modules.account.UserType).ADMIN}">
-                <a class="nav-link" th:href="@{/facility/form}">시설생성</a>
             </li>
             <li class="nav-item" sec:authorize="isAuthenticated()">
                 <form class="form-inline my-2 my-lg-0" action="#" th:action="@{/logout}" method="post">

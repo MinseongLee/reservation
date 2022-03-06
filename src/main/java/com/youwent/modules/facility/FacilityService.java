@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -115,4 +116,11 @@ public class FacilityService {
     }
 
 
+    public List<Facility> getFacilitiesByKeyword(Account account, String keyword, String orderByBuilding) {
+        return orderByBuilding.equals("asc") ? facilityRepository.findByKeywordOrderByAsc(account, keyword) : facilityRepository.findByKeywordOrderByDesc(account, keyword);
+    }
+
+    public List<Facility> getFacilities(Account account) {
+        return facilityRepository.findByAllExceptForReservation(account);
+    }
 }

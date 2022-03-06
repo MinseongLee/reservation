@@ -33,6 +33,7 @@ public class Reservation extends BaseEntity {
 
     private void addFacility(Facility facility) {
         this.facility = facility;
+        this.facility.getReservations().add(this);
     }
 
     @Builder
