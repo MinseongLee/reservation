@@ -76,8 +76,7 @@ public class FacilitySettingsController {
     @ResponseBody
     public CustomResponse userReservation(@CurrentAccount Account account, @PathVariable Long id,
                                           @RequestParam("reservationDate") String reservationDate) {
-        // format yyyy-mm-dd
-        // 여기서 validate 과 예약처리를 끝내줘야함.
+        // date format yyyy-mm-dd
         Facility facility = facilityService.reservationFacility(id, account, reservationDate);
         return CustomResponse.responseWithFacilityDto(FacilityDto.createFacilityDto(facility));
     }

@@ -68,14 +68,9 @@ public class FacilityService {
 
     //예약된적이 있는지 확인.
     public Facility reservationFacility(Long id, Account account, String reservationDate) {
-        // nowReserveCnt++,
-        // before nowReservaCnt++, validator for now <= max
-        // create reservation entity for reservationDate
-        // reservation date가 오늘보다 커야됨. done
         Facility facility = getFacility(id);
+        // 날짜 밸리데이션 체크
         LocalDateTime reservedDate = getReservationDate(reservationDate);
-        // reservation을 만들기 전에 nowreserveCnt와 max와 비교
-        //실질적으로 ++해주는 곳에서 동시성처리가 들어가야한다
         if (facility.HaveReserve()) {
             // 전에 예약했던것이 존재하는지 확인.
             Reservation reservation = reservationRepository.findFirstByAccount_IdAndFacility_Id(account.getId(), facility.getId());
@@ -96,12 +91,13 @@ public class FacilityService {
                 // 예약 취소상태라면 예약
                 reservation.reserve(reservedDate);
             }
+            // ++ and now==max : possibleReservation=false
             facility.plusNowReserveCnt();
         }
         return facility;
     }
 
-    // 날짜를 입력받는 메서드
+    // 날짜를 입력받는 메서드 날짜에 대한 벨리데이션 체크
     private LocalDateTime getReservationDate(String reservationDate) {
         try {
             if (globalService.isAfterToday(reservationDate)) {
