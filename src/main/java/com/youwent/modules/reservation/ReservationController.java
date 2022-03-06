@@ -37,4 +37,12 @@ public class ReservationController {
         return CustomResponse.defaultCustomResponse();
     }
 
+    @GetMapping(SEARCH)
+    public String searchReservations(@CurrentAccount Account account, String keyword, String orderByBuilding, Model model) {
+        List<Reservation> reservations = reservationService.getReservationsByKeyword(account, keyword, orderByBuilding);
+        List<ReservationDto> reservationDtoList = reservationService.getReservationDtoList(reservations);
+        model.addAttribute(account);
+        model.addAttribute("reservations", reservationDtoList);
+        return RESERVATION + ROOT + INDEX;
+    }
 }

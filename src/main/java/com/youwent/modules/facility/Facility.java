@@ -2,6 +2,7 @@ package com.youwent.modules.facility;
 
 import com.youwent.modules.common.BaseEntity;
 import com.youwent.modules.account.Account;
+import com.youwent.modules.reservation.Reservation;
 import lombok.*;
 
 import javax.persistence.*;
@@ -52,6 +53,9 @@ public class Facility extends BaseEntity {
             joinColumns = { @JoinColumn(name = "facility_id") },
             inverseJoinColumns = { @JoinColumn(name = "account_id") })
     private Set<Account> accounts = new HashSet<>();
+
+    @OneToMany(mappedBy = "facility")
+    private Set<Reservation> reservations = new HashSet<>();
 
     // 지금 여기서.. set을 초기화 했는데도 null이 뜬다. 이유가 뭐지?
     // 아마도.. build를 하면, 해당 내용이 자동으로 추가가 안되는거같다. 생성자에 빌더를 사용하여 직접 입력해서 넣자.

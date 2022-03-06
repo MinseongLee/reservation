@@ -2,9 +2,28 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments :: head"></head>
 <body class="bg-light">
-    <div th:replace="fragments :: facility-nav"></div>
-    <!-- 여기에 모든 건물들을 가져와야한다.-->
+    <div th:replace="fragments :: main-nav"></div>
     <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <form th:action="@{/facility/search}" class="form-inline" method="get">
+                            <input class="form-control mr-sm-2" name="keyword" type="search" placeholder="시설 찾기"
+                                   aria-label="Search"/>
+                            <input id="asc-building" name="orderByBuilding" type="radio" value="asc">
+                            <label for="asc-building">빌딩순</label>
+                            <input id="desc-building" name="orderByBuilding" type="radio" value="desc">
+                            <label for="desc-building">빌딩역순</label>
+
+                            <div class="col-sm-6">
+                                <button class="btn btn-primary btn-block" type="submit">검색</button>
+                            </div>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
         <div class="py-5 text-center">
             <h2>모든 시설</h2>
         </div>

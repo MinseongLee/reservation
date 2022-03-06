@@ -36,7 +36,8 @@ public class FacilityController {
         // 여기서 존재하는 모든 facility를 보여줄 것. paging 처리해서
         model.addAttribute(account);
         // facilities를 model로 넘겨줄 것.
-        List<Facility> facilities = facilityRepository.findAll();
+        // 예약자는 제외하고 넘길 것.
+        List<Facility> facilities = facilityService.getFacilities(account);
         model.addAttribute("facilities", facilities);
         return FACILITY + ROOT + INDEX;
     }
@@ -68,4 +69,13 @@ public class FacilityController {
         return FACILITY + VIEW;
     }
 
+    @GetMapping(SEARCH)
+    public String searchFacilities(@CurrentAccount Account account, String keyword, String orderByBuilding, Model model) {
+        // asc or desc
+        List<Facility> facilities = facilityService.getFacilitiesByKeyword(account, keyword, orderByBuilding);
+        // 현재 예약을 했다면, 예약한 user는 제외
+        model.addAttribute("facilities", facilities);
+        model.addAttribute(account);
+        return FACILITY + ROOT + INDEX;
+    }
 }

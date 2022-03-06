@@ -14,6 +14,7 @@ public class Url {
     public static final String EMAILTOKEN = "/emailtoken";
     public static final String RESENDEMAIL = "/resendemail";
     public static final String DELETE = "/delete";
+    public static final String SEARCH = "/search";
 
 
     // both

@@ -44,4 +44,8 @@ public class ReservationService {
         return reservationById.get();
 
     }
+
+    public List<Reservation> getReservationsByKeyword(Account account, String keyword, String orderByBuilding) {
+        return orderByBuilding.equals("asc") ? reservationRepository.findByKeywordOrderByAsc(account, keyword) : reservationRepository.findByKeywordOrderByDesc(account, keyword);
+    }
 }
