@@ -55,9 +55,9 @@ public class Facility extends BaseEntity {
 
     // 지금 여기서.. set을 초기화 했는데도 null이 뜬다. 이유가 뭐지?
     // 아마도.. build를 하면, 해당 내용이 자동으로 추가가 안되는거같다. 생성자에 빌더를 사용하여 직접 입력해서 넣자.
-    public void addAccountFacility(Account account) {
+    private void addAccountFacility(Account account) {
         this.accounts.add(account);
-        account.getFacilities().add(this);
+//        account.getFacilities().add(this);
     }
     @Builder
     public Facility(String building, String address, LocalTime openTime, LocalTime closeTime, int nowReserveCnt, int maxReserveCnt, boolean possibleReservation, LocalDateTime createdDate, Account account) {
@@ -72,8 +72,21 @@ public class Facility extends BaseEntity {
         if (account != null) addAccountFacility(account);
     }
 
-    // 단방향으로 admin 저장.
-//    public void addAdmin(Account account) {
-//        this.admins.add(account);
-//    }
+    public boolean HaveReserve() {
+        return this.nowReserveCnt < this.maxReserveCnt;
+    }
+
+    // thread safe
+    public synchronized void plusNowReserveCnt() {
+        this.nowReserveCnt++;
+        checkPossibleReservation();
+    }
+
+    public void minusReserveCnt() {
+        this.nowReserveCnt--;
+    }
+
+    private void checkPossibleReservation() {
+        if (this.nowReserveCnt==this.maxReserveCnt) this.possibleReservation = false;
+    }
 }

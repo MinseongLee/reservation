@@ -1,6 +1,7 @@
 package com.youwent.modules.facility;
 
 import com.youwent.modules.account.Account;
+import com.youwent.modules.account.WithAccount;
 import com.youwent.modules.account.WithAdmin;
 import com.youwent.infra.MockMvcTest;
 import com.youwent.modules.account.AccountRepository;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -116,5 +118,17 @@ public class FacilitySettingsControllerTest {
 
         Optional<Facility> destroy = facilityRepository.findById(id);
         assertFalse(destroy.isPresent());
+    }
+
+    @Test
+    @WithAccount(value = "dexter@gmail.com")
+    @DisplayName("시설 예약 - 성공")
+    void reservationFacility() throws Exception {
+        Account account = accountRepository.findByEmail("admin@gmail.com");
+        Facility facility = facilityFactory.createFacility(account);
+        Long id = facility.getId();
+        String date = LocalDate.now().toString();
+        mockMvc.perform(get(ROOT + FACILITY + "/" + id + ROOT + SETTINGS + ROOT + RESERVATION + "?reservationDate=" + date))
+                .andExpect(status().isOk());
     }
 }

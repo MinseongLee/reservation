@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: head"></head>
+<body class="bg-light">
+    <div th:replace="fragments :: main-nav"></div>
+    <div class="container">
+        <div class="py-5 text-center">
+            <h2>내 예약</h2>
+        </div>
+        <div class="row">
+            <div class="col-md-4" th:each="reservation: ${reservations}">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title context" th:text="${reservation.building}"></h5>
+                        <span class="reservation-id" th:text="${reservation.id}" hidden></span>
+                        <p class="card-text context">
+                            <span>주소: </span>
+                            <span th:text="${reservation.address}"></span>
+                        </p>
+                        <p class="card-text context">
+                            <span>오픈시간: </span>
+                            <span th:text="${reservation.openTime}"></span>
+                        </p>
+                        <p class="card-text context">
+                            <span>클로즈시간: </span>
+                            <span th:text="${reservation.closeTime}"></span>
+                        </p>
+                        <p class="card-text context">
+                            <span>예약날짜: </span>
+                            <span th:text="${reservation.reservedDate}"></span>
+                        </p>
+                        <button class="btn btn-primary btn-block user-reservation-cancel" type="button"
+                                th:if="${account != null && account.userType == T(com.youwent.modules.account.UserType).USER}">시설 예약취소</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div th:replace="fragments :: footer"></div>
+</body>
+</html>
+
+<script type="application/javascript">
+
+    $(function () {
+
+        var csrfToken = $("meta[name='_csrf']").attr("content");
+        var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+        });
+        $('.user-reservation-cancel').on('click', function () {
+            // remove를 하자.
+            var pos = $(this);
+            var id = pos.parent().children().eq(1).text();
+
+            $.ajax({
+                url: '/reservation/' +id,
+                type: "PUT",
+                dataType: "json",
+            }).done(function (data, status) {
+                // 삭제된 부분만 화면에 안보이게 하였다. 그렇다면 굳이 다시 가져올 필요가 없으므로,
+                pos.parent().parent().remove();
+                alert(data.statusCode + " "+ data.resultMsg);
+            }).fail(function (data, status){
+                alert(data.responseJSON.message);
+            });
+        });
+
+    });
+</script>

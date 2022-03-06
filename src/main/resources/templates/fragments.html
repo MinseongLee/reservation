@@ -29,21 +29,13 @@
             <li class="nav-item" sec:authorize="isAuthenticated()" th:if="${account != null}">
                 <a class="nav-link" th:href="@{'/profile/' + ${account.id}}">설정</a>
             </li>
-<!--            시설 목록에서 예약 추가, 예약가능 상태인 시설과 예약이 다 찬 시설로 나눌 것-->
+<!--            시설목록에서 시설 수정, 삭제, 추가가 가능해야한다.-->
+            <li class="nav-item" sec:authorize="isAuthenticated()" th:if="${account != null}">
+                <a class="nav-link" th:href="@{/facility}">시설목록</a>
+            </li>
+            <!--            내 예약시설 목록에서 예약 추가, 예약가능 상태인 시설과 예약이 다 찬 시설로 나눌 것-->
             <li class="nav-item" sec:authorize="isAuthenticated()" th:if="${account != null && account.userType == T(com.youwent.modules.account.UserType).USER}">
-                <a class="nav-link" th:href="@{/facility}">시설 목록</a>
-            </li>
-<!--            내 예약에서 예약 수정, 삭제가 가능해야한다.-->
-            <li class="nav-item" sec:authorize="isAuthenticated()" th:if="${account != null && account.userType == T(com.youwent.modules.account.UserType).USER}">
-                <a class="nav-link" th:href="@{'/profile/' + ${account.id}}">내 예약</a>
-            </li>
-<!--            시설관리에서 시설 수정, 삭제, 추가가 가능해야한다.-->
-            <li class="nav-item" sec:authorize="isAuthenticated()" th:if="${account != null && account.userType == T(com.youwent.modules.account.UserType).ADMIN}">
-                <a class="nav-link" th:href="@{/facility}">시설관리</a>
-            </li>
-<!--            유저관리에서 유저 삭제, 어드민 유저 추가(이건 옵셔널)가 가능해야한다.-->
-            <li class="nav-item" sec:authorize="isAuthenticated()" th:if="${account != null && account.userType == T(com.youwent.modules.account.UserType).ADMIN}">
-                <a class="nav-link" th:href="@{/users}">유저관리</a>
+                <a class="nav-link" th:href="@{/reservation}">내 예약시설 목록</a>
             </li>
             <li class="nav-item" sec:authorize="isAuthenticated()">
                 <form class="form-inline my-2 my-lg-0" action="#" th:action="@{/logout}" method="post">
@@ -104,6 +96,6 @@
     <!-- JavaScript Bundle with Popper -->
     <script src="/node_modules/jquery/dist/jquery.min.js"></script>
     <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="/node_modules/moment/min/moment.min.js"></script>
 </div>
 </html>
