@@ -5,6 +5,13 @@
 * java 8, springboot 2.6.4, mysql 8.x, spring data jpa, maven
 * spring security, modelmapper, querydsl, junit, lombok, spring scheduler
 
+### git 전략
+* master, develop, feature, hotfix, release
+* master : 실 서버
+* develop : 개발
+* feature : 기능
+* 현재 개발 단계므로, feature에서 개발 후 develop에 merge 후 관리.
+
 ### 구조 설계
 * infra package
   * third party extension과 configuration을 관리
