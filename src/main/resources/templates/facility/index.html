@@ -59,8 +59,6 @@
                         </a>
                         <button class="btn btn-primary btn-block user-reservation" type="button"
                                 th:if="${account != null && account.userType == T(com.youwent.modules.account.UserType).USER}">시설 예약</button>
-                        <button class="btn btn-primary btn-block user-reservation-cancel" type="button"
-                                th:if="${account != null && account.userType == T(com.youwent.modules.account.UserType).USER}">시설 예약취소</button>
                     </div>
                 </div>
             </div>
@@ -87,15 +85,16 @@
                 type: "GET",
                 dataType: "json",
             }).done(function (data, status) {
-                var nowReserveCnt = pos.prev().prev().prev().prev().children().eq(1);
-                nowReserveCnt.text(data.dto.nowReserveCnt);
-                var possibleReservation = pos.prev().prev().prev().children().eq(1);
-                if (data.dto.possibleReservation) {
-                    possibleReservation.text('예약가능');
-                } else {
-                    possibleReservation.text('예약불가능');
-                }
-                pos.prev().prev().prev().children().eq(2).remove();
+                // var nowReserveCnt = pos.prev().prev().prev().prev().children().eq(1);
+                // nowReserveCnt.text(data.dto.nowReserveCnt);
+                // var possibleReservation = pos.prev().prev().prev().children().eq(1);
+                // if (data.dto.possibleReservation) {
+                //     possibleReservation.text('예약가능');
+                // } else {
+                //     possibleReservation.text('예약불가능');
+                // }
+                // pos.prev().prev().prev().children().eq(2).remove();
+                pos.parent().parent().remove();
                 alert(data.statusCode + " "+ data.resultMsg);
             }).fail(function (data, status){
                 alert(data.responseJSON.message);

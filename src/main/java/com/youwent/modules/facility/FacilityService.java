@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
@@ -67,12 +68,15 @@ public class FacilityService {
         facilityRepository.delete(facility);
     }
 
-    //예약된적이 있는지 확인.
+    //예약된 적이 있는지 확인 후 없으면 생성
     public Facility reservationFacility(Long id, Account account, String reservationDate) {
         Facility facility = getFacility(id);
         // 날짜 밸리데이션 체크
         LocalDateTime reservedDate = getReservationDate(reservationDate);
-        if (facility.HaveReserve()) {
+        // reservedDate 기준으로 now < max 를 확인해야한다.
+        Long reservationCounts = reservationRepository.findByReservedDate(facility, reservedDate);
+        int nowReserveCnt = reservationCounts == null ? 0 : Math.toIntExact(reservationCounts);
+        if (nowReserveCnt < facility.getMaxReserveCnt()) {
             // 전에 예약했던것이 존재하는지 확인.
             Reservation reservation = reservationRepository.findFirstByAccount_IdAndFacility_Id(account.getId(), facility.getId());
             // 존재하지 않으면 생성
@@ -92,10 +96,23 @@ public class FacilityService {
                 // 예약 취소상태라면 예약
                 reservation.reserve(reservedDate);
             }
+            // 오늘인 경우
             // ++ and now==max : possibleReservation=false
-            facility.plusNowReserveCnt();
+            if (reservedDate.equals(LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0)))) facility.plusNowReserveCnt();
+        } else {
+            throw new IllegalArgumentException("예약이 다 찼습니다.");
         }
         return facility;
+    }
+
+    // async for schedule
+    // 자정에 오늘 예약자들 쭉 업데이트
+    public void updateAllNowReserveCnt() {
+        List<Facility> facilities = facilityRepository.findAll();
+        for (Facility facility : facilities) {
+            Long todayCnt = reservationRepository.findByReservationToday(facility);
+            facility.setNowReserveCnt(todayCnt == null ? 0 : Math.toIntExact(todayCnt));
+        }
     }
 
     // 날짜를 입력받는 메서드 날짜에 대한 벨리데이션 체크

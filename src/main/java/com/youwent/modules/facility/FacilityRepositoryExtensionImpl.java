@@ -2,6 +2,7 @@ package com.youwent.modules.facility;
 
 import com.querydsl.jpa.JPQLQuery;
 import com.youwent.modules.account.Account;
+import com.youwent.modules.reservation.QReservation;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.List;
@@ -34,8 +35,9 @@ public class FacilityRepositoryExtensionImpl extends QuerydslRepositorySupport i
     // common method
     private JPQLQuery<Facility> findByAllExceptAccount(Account account) {
         QFacility facility = QFacility.facility;
-        // account and status.isTrue() 제외한 모든 facilities
-        return from(facility).where(facility.reservations.any().account.ne(account)
-                .or(facility.reservations.any().status.isFalse()));
+        QReservation reservation = QReservation.reservation;
+        // account 이면서, status=True 인 애들을 제외하고 리턴. : 이 값에 속하는 facility들이 속하면 안 된다.
+        JPQLQuery<Facility> facilities = from(reservation).where(reservation.account.eq(account), reservation.status.isTrue()).select(reservation.facility);
+        return from(facility).where(facility.notIn(facilities));
     }
 }
