@@ -23,7 +23,6 @@ public class FacilityController {
     // 시설 관리에서 모든 시설들을 보여주고, 거기에서 시설 추가 버튼이 있어야한다.
 
     private final FacilityService facilityService;
-    private final FacilityRepository facilityRepository;
     private final FacilityFormValidator facilityFormValidator;
 
     @InitBinder("facilityForm")

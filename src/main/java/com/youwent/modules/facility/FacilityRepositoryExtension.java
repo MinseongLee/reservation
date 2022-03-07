@@ -12,4 +12,5 @@ public interface FacilityRepositoryExtension {
 
     List<Facility> findByKeywordOrderByAsc(Account account, String keyword);
     List<Facility> findByKeywordOrderByDesc(Account account, String keyword);
+
 }
