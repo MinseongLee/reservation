@@ -2,7 +2,7 @@
 
 ### 사용한 기술
 * html, jquery, thymeleaf, bootstrap, npm 패키지관리
-* java 8, springboot 2.6.4, mysql, jpa, maven
+* java 8, springboot 2.6.4, mysql 8.x, spring data jpa, maven
 * spring security, modelmapper, querydsl, junit, lombok, spring scheduler
 
 ### 구조 설계
@@ -31,12 +31,15 @@
   * local, test : 콘솔 메일
   * dev : 실제 이메일 보내기
 * @CurrentAccount : user principal 표현
-* 유저 생성, 수정, 삭제
+* 일반 유저 생성, 수정, 삭제
+* 어드민 타입은 UI에서 선택불가.
+* UI에서 유저 생성 후, 어드민 타입(UserType.ADMIN) 변경 혹은 runner로 어드민 유저 생성 후 사용.
 
 ### 시설 관리 
 * 관리자만 시설 생성, 수정, 삭제할 수 있음
 * 유저는 확인만 가능.
 * 시설 검색, 정렬은 둘 다 가능
+* paging 처리
 
 ### 예약 관리
 * 관리자는 예약할 수 없음
@@ -44,6 +47,7 @@
 * 유저는 날짜를 선택하여 예약할 수 있음
 * 예약 업데이트 동기화
 * 예약관리창에서 시설 검색, 정렬 가능
+* paging 처리
 
 ### 스케줄러
 * 매일 자정에 "오늘 예약 수" 업데이트

@@ -1,8 +1,5 @@
 server:
   port: 8080
-  servlet:
-    session:
-      timeout: 5h
 
 spring:
   datasource:
@@ -10,7 +7,7 @@ spring:
     url: jdbc:mysql://localhost:3306/reservation
     username: root
     password: 1111
-#    dbcp2:
+  #    dbcp2:
   # true일 경우 커넥션 풀에서 커넥션을 가져올 때 커넥션이 유효한지의 여부를 검사한다.
 #      test-on-borrow: true
   # query
@@ -28,6 +25,9 @@ spring:
 #    database-platform: org.hibernate.dialect.MySQLDialect
   profiles:
     active: local
+  devtools:
+    livereload:
+      enabled: true
 
 # value in table
 logging:

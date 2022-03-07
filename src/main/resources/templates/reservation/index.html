@@ -4,16 +4,16 @@
 <body class="bg-light">
     <div th:replace="fragments :: main-nav"></div>
     <div class="container">
-        <div class="row">
-            <div class="col-sm-4">
-                <ul class="navbar-nav mr-auto">
+        <div class="row justify-content-center">
+            <div class="col-sm-4 justify-content-center">
+                <ul class="navbar-nav mr-auto justify-content-center">
                     <li class="nav-item">
-                        <form th:action="@{/reservation/search}" class="form-inline" method="get">
-                            <input class="form-control mr-sm-2" name="keyword" type="search" placeholder="시설 찾기"
+                        <form th:action="@{/reservation}" class="form-inline" method="get">
+                            <input class="form-control mr-sm-2" name="keyword" th:value="${keyword}" type="search" placeholder="시설 찾기"
                                    aria-label="Search"/>
-                            <input id="asc-building" name="orderByBuilding" type="radio" value="asc">
+                            <input id="asc-building" name="orderByBuilding" type="radio" value="asc" th:checked="${orderByBuilding=='asc'}">
                             <label for="asc-building">빌딩순</label>
-                            <input id="desc-building" name="orderByBuilding" type="radio" value="desc">
+                            <input id="desc-building" name="orderByBuilding" type="radio" value="desc" th:checked="${orderByBuilding=='desc'}">
                             <label for="desc-building">빌딩역순</label>
 
                             <div class="col-sm-6">
@@ -28,7 +28,7 @@
             <h2>내 예약</h2>
         </div>
         <div class="row">
-            <div class="col-md-4" th:each="reservation: ${reservations}">
+            <div class="col-md-4" th:each="reservation: ${reservations.getContent()}">
                 <div class="card mb-4 shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title context" th:text="${reservation.building}"></h5>
@@ -55,6 +55,26 @@
                 </div>
             </div>
         </div>
+
+        <div class="row justify-content-center">
+            <div class="col-sm-10">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${!reservations.hasPrevious()} ? disabled">
+                            <a th:href="@{'/reservation?keyword=' + ${keyword} + '&orderByBuilding=' + ${orderByBuilding} + '&page=' + ${reservations.getNumber() - 1}}" class="page-link" href="#">Previous</a>
+                        </li>
+                        <li class="page-item" th:classappend="${index == reservations.getNumber()} ? active"
+                            th:each="index: ${#numbers.sequence(0, reservations.getTotalPages() - 1)}">
+                            <a th:href="@{'/reservation?keyword=' + ${keyword} + '&orderByBuilding=' + ${orderByBuilding} + '&page=' + ${index}}" th:text="${index + 1}" class="page-link" href="#">1</a>
+                        </li>
+                        <li class="page-item" th:classappend="${!reservations.hasNext()} ? disabled">
+                            <a th:href="@{'/reservation?keyword=' + ${keyword} + '&orderByBuilding=' + ${orderByBuilding} + '&page=' + ${reservations.getNumber() + 1}}" class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
     </div>
 
 

@@ -1,16 +1,22 @@
 package com.youwent.modules.reservation;
 
+import com.querydsl.core.QueryResults;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import com.youwent.modules.account.Account;
 import com.youwent.modules.account.QAccount;
 import com.youwent.modules.facility.Facility;
 import com.youwent.modules.facility.QFacility;
+import com.youwent.modules.reservation.dto.ReservationDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
+import java.util.Objects;
 
 public class ReservationRepositoryExtensionImpl extends QuerydslRepositorySupport implements ReservationRepositoryExtension {
 
@@ -18,24 +24,39 @@ public class ReservationRepositoryExtensionImpl extends QuerydslRepositorySuppor
         super(Reservation.class);
     }
 
-    // innerjoin fetchjoin으로 연관된 데이터를 한 번에 가져와 n+1 문제 해결
     @Override
-    public List<Reservation> findByAccountAndStatusIsTrue(Account account) {
-        return findByAccountAndStatus(account).fetch();
+    public Page<ReservationDto> findByKeywordOrderByAsc(Account account, String keyword, Pageable pageable) {
+        QReservation reservation = QReservation.reservation;
+        JPQLQuery<ReservationDto> query = findByAccountAndStatus(account).where(reservation.facility.building.containsIgnoreCase(keyword))
+                .orderBy(reservation.facility.building.asc())
+                .select(Projections.fields(ReservationDto.class,
+                        reservation.id,
+                        reservation.reservedDate,
+                        reservation.facility.building,
+                        reservation.facility.address,
+                        reservation.facility.openTime,
+                        reservation.facility.closeTime));
+        JPQLQuery<ReservationDto> pageableQuery = Objects.requireNonNull(getQuerydsl()).applyPagination(pageable, query);
+        QueryResults<ReservationDto> results = pageableQuery.fetchResults();
+        return new PageImpl<>(results.getResults(), pageable, results.getTotal());
     }
 
+    // select에 연관관계 데이터가 포함되어 한 번에 가져오면, fetchJoin()을 안써도 n+1 문제가 발생하지 않는다.(데이터를 한 번에 가져오므로)
     @Override
-    public List<Reservation> findByKeywordOrderByAsc(Account account, String keyword) {
+    public Page<ReservationDto> findByKeywordOrderByDesc(Account account, String keyword, Pageable pageable) {
         QReservation reservation = QReservation.reservation;
-        return findByAccountAndStatus(account).where(reservation.facility.building.containsIgnoreCase(keyword))
-                .orderBy(reservation.facility.building.asc()).fetch();
-    }
-
-    @Override
-    public List<Reservation> findByKeywordOrderByDesc(Account account, String keyword) {
-        QReservation reservation = QReservation.reservation;
-        return findByAccountAndStatus(account).where(reservation.facility.building.containsIgnoreCase(keyword))
-                .orderBy(reservation.facility.building.asc()).fetch();
+        JPQLQuery<ReservationDto> query = findByAccountAndStatus(account).where(reservation.facility.building.containsIgnoreCase(keyword))
+                .orderBy(reservation.facility.building.desc())
+                .select(Projections.fields(ReservationDto.class,
+                        reservation.id,
+                        reservation.reservedDate,
+                        reservation.facility.building,
+                        reservation.facility.address,
+                        reservation.facility.openTime,
+                        reservation.facility.closeTime));
+        JPQLQuery<ReservationDto> pageableQuery = Objects.requireNonNull(getQuerydsl()).applyPagination(pageable, query);
+        QueryResults<ReservationDto> results = pageableQuery.fetchResults();
+        return new PageImpl<>(results.getResults(), pageable, results.getTotal());
     }
 
     // 오늘 기준으로 예약자 모두 가져올 것. status=true
@@ -48,6 +69,7 @@ public class ReservationRepositoryExtensionImpl extends QuerydslRepositorySuppor
                 .select(reservation.facility.count())
                 .groupBy(reservation.facility)
                 .distinct()
+                // fetchJoin() 데이터를 한 번에 조회 n + 1 문제 해결
                 .innerJoin(reservation.facility, QFacility.facility).fetchJoin();
         return query.fetchOne();
     }
@@ -66,7 +88,7 @@ public class ReservationRepositoryExtensionImpl extends QuerydslRepositorySuppor
         QReservation reservation = QReservation.reservation;
         return from(reservation).where(reservation.account.eq(account)
                         .and(reservation.status.isTrue()))
-                .innerJoin(reservation.facility, QFacility.facility).fetchJoin()
-                .innerJoin(reservation.account, QAccount.account).fetchJoin();
+                .innerJoin(reservation.facility, QFacility.facility)
+                .innerJoin(reservation.account, QAccount.account);
     }
 }
