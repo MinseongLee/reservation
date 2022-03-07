@@ -1,11 +1,14 @@
 package com.youwent.modules.reservation.dto;
 
-import com.youwent.modules.reservation.Reservation;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 @Data
-@NoArgsConstructor
+@NoArgsConstructor @AllArgsConstructor
 public class ReservationDto {
     private Long id;
 
@@ -13,21 +16,9 @@ public class ReservationDto {
 
     private String address;
 
-    private String openTime;
+    private LocalTime openTime;
 
-    private String closeTime;
+    private LocalTime closeTime;
 
-    private String reservedDate;
-
-    public static ReservationDto createReservationDto(Reservation reservation) {
-        ReservationDto reservationDto = new ReservationDto();
-        reservationDto.setId(reservation.getId());
-        reservationDto.setBuilding(reservation.getFacility().getBuilding());
-        reservationDto.setAddress(reservation.getFacility().getAddress());
-        reservationDto.setOpenTime(reservation.getFacility().getOpenTime().toString());
-        reservationDto.setCloseTime(reservation.getFacility().getCloseTime().toString());
-        reservationDto.setReservedDate(reservation.getReservedDate().toString());
-        return reservationDto;
-    }
-
+    private LocalDateTime reservedDate;
 }

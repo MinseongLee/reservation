@@ -2,14 +2,13 @@ package com.youwent.modules.reservation;
 
 
 import com.youwent.modules.account.Account;
-import com.youwent.modules.facility.Facility;
 import com.youwent.modules.reservation.dto.ReservationDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,20 +16,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ReservationService {
     private final ReservationRepository reservationRepository;
-
-
-    public List<Reservation> getReservationsByAccount(Account account) {
-        // status true
-        return reservationRepository.findByAccountAndStatusIsTrue(account);
-    }
-
-    public List<ReservationDto> getReservationDtoList(List<Reservation> reservations) {
-        List<ReservationDto> reservationDtoList = new ArrayList<>();
-        for (Reservation r : reservations) {
-            reservationDtoList.add(ReservationDto.createReservationDto(r));
-        }
-        return reservationDtoList;
-    }
 
     public void updateStatus(Reservation reservation) {
         reservation.updateStatus();
@@ -45,7 +30,15 @@ public class ReservationService {
 
     }
 
-    public List<Reservation> getReservationsByKeyword(Account account, String keyword, String orderByBuilding) {
-        return orderByBuilding.equals("asc") ? reservationRepository.findByKeywordOrderByAsc(account, keyword) : reservationRepository.findByKeywordOrderByDesc(account, keyword);
+    public Page<ReservationDto> getReservationsByKeyword(Account account, String keyword, String orderByBuilding, Pageable pageable) {
+        return orderByBuilding.equals("asc") ? reservationRepository.findByKeywordOrderByAsc(account, keyword, pageable) : reservationRepository.findByKeywordOrderByDesc(account, keyword, pageable);
+    }
+
+    public String getKeyword(String keyword) {
+        return keyword == null ? "" : keyword;
+    }
+
+    public String getOrderByBuilding(String orderByBuilding) {
+        return orderByBuilding == null ? "" : orderByBuilding;
     }
 }

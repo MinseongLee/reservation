@@ -8,6 +8,8 @@ import com.youwent.modules.reservation.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -133,11 +135,16 @@ public class FacilityService {
     }
 
 
-    public List<Facility> getFacilitiesByKeyword(Account account, String keyword, String orderByBuilding) {
-        return orderByBuilding.equals("asc") ? facilityRepository.findByKeywordOrderByAsc(account, keyword) : facilityRepository.findByKeywordOrderByDesc(account, keyword);
+    public Page<Facility> getFacilitiesByKeyword(Account account, String keyword, String orderByBuilding, Pageable pageable) {
+        // default desc
+        return orderByBuilding.equals("asc") ? facilityRepository.findByKeywordOrderByAsc(account, keyword, pageable) : facilityRepository.findByKeywordOrderByDesc(account, keyword, pageable);
     }
 
-    public List<Facility> getFacilities(Account account) {
-        return facilityRepository.findByAllExceptForReservation(account);
+    public String getKeyword(String keyword) {
+        return keyword == null ? "" : keyword;
+    }
+
+    public String getOrderByBuilding(String orderByBuilding) {
+        return orderByBuilding == null ? "" : orderByBuilding;
     }
 }

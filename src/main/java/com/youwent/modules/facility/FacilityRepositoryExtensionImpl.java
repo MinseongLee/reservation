@@ -1,11 +1,15 @@
 package com.youwent.modules.facility;
 
+import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.JPQLQuery;
 import com.youwent.modules.account.Account;
 import com.youwent.modules.reservation.QReservation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
-import java.util.List;
+import java.util.Objects;
 
 public class FacilityRepositoryExtensionImpl extends QuerydslRepositorySupport implements FacilityRepositoryExtension {
 
@@ -14,22 +18,24 @@ public class FacilityRepositoryExtensionImpl extends QuerydslRepositorySupport i
     }
 
     @Override
-    public List<Facility> findByAllExceptForReservation(Account account) {
-        return findByAllExceptAccount(account).fetch();
+    public Page<Facility> findByKeywordOrderByAsc(Account account, String keyword, Pageable pageable) {
+        QFacility facility = QFacility.facility;
+        JPQLQuery<Facility> query = findByAllExceptAccount(account).where(facility.building.containsIgnoreCase(keyword))
+                .orderBy(facility.building.asc());
+        JPQLQuery<Facility> pageableQuery = Objects.requireNonNull(getQuerydsl()).applyPagination(pageable, query);
+        QueryResults<Facility> results = pageableQuery.fetchResults();
+        // contents, pageable, totalCnt(현재기준)
+        return new PageImpl<>(results.getResults(), pageable, results.getTotal());
     }
 
     @Override
-    public List<Facility> findByKeywordOrderByAsc(Account account, String keyword) {
+    public Page<Facility> findByKeywordOrderByDesc(Account account, String keyword, Pageable pageable) {
         QFacility facility = QFacility.facility;
-        return findByAllExceptAccount(account).where(facility.building.containsIgnoreCase(keyword))
-                .orderBy(facility.building.asc()).fetch();
-    }
-
-    @Override
-    public List<Facility> findByKeywordOrderByDesc(Account account, String keyword) {
-        QFacility facility = QFacility.facility;
-        return findByAllExceptAccount(account).where(facility.building.containsIgnoreCase(keyword))
-                .orderBy(facility.building.desc()).fetch();
+        JPQLQuery<Facility> query = findByAllExceptAccount(account).where(facility.building.containsIgnoreCase(keyword))
+                .orderBy(facility.building.desc());
+        JPQLQuery<Facility> pageableQuery = Objects.requireNonNull(getQuerydsl()).applyPagination(pageable, query);
+        QueryResults<Facility> results = pageableQuery.fetchResults();
+        return new PageImpl<>(results.getResults(), pageable, results.getTotal());
     }
 
     // common method

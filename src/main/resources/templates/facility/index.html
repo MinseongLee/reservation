@@ -4,16 +4,16 @@
 <body class="bg-light">
     <div th:replace="fragments :: main-nav"></div>
     <div class="container">
-        <div class="row">
-            <div class="col-sm-4">
-                <ul class="navbar-nav mr-auto">
+        <div class="row justify-content-center">
+            <div class="col-sm-4 justify-content-center">
+                <ul class="navbar-nav mr-auto justify-content-center">
                     <li class="nav-item">
-                        <form th:action="@{/facility/search}" class="form-inline" method="get">
-                            <input class="form-control mr-sm-2" name="keyword" type="search" placeholder="시설 찾기"
+                        <form th:action="@{/facility}" class="form-inline" method="get">
+                            <input class="form-control mr-sm-2" name="keyword" th:value="${keyword}" type="search" placeholder="시설 찾기"
                                    aria-label="Search"/>
-                            <input id="asc-building" name="orderByBuilding" type="radio" value="asc">
+                            <input id="asc-building" name="orderByBuilding" type="radio" value="asc" th:checked="${orderByBuilding=='asc'}">
                             <label for="asc-building">빌딩순</label>
-                            <input id="desc-building" name="orderByBuilding" type="radio" value="desc">
+                            <input id="desc-building" name="orderByBuilding" type="radio" value="desc" th:checked="${orderByBuilding=='desc'}">
                             <label for="desc-building">빌딩역순</label>
 
                             <div class="col-sm-6">
@@ -28,7 +28,7 @@
             <h2>모든 시설</h2>
         </div>
         <div class="row">
-            <div class="col-md-4" th:each="facility: ${facilities}">
+            <div class="col-md-4" th:each="facility: ${facilities.getContent()}">
                 <div class="card mb-4 shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title context" th:text="${facility.building}"></h5>
@@ -63,6 +63,25 @@
                 </div>
             </div>
         </div>
+        <div class="row justify-content-center">
+            <div class="col-sm-10">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${!facilities.hasPrevious()} ? disabled">
+                            <a th:href="@{'/facility?keyword=' + ${keyword} + '&orderByBuilding=' + ${orderByBuilding} + '&page=' + ${facilities.getNumber() - 1}}" class="page-link" href="#">Previous</a>
+                        </li>
+                        <li class="page-item" th:classappend="${index == facilities.getNumber()} ? active"
+                            th:each="index: ${#numbers.sequence(0, facilities.getTotalPages() - 1)}">
+                            <a th:href="@{'/facility?keyword=' + ${keyword} + '&orderByBuilding=' + ${orderByBuilding} + '&page=' + ${index}}" th:text="${index + 1}" class="page-link" href="#">1</a>
+                        </li>
+                        <li class="page-item" th:classappend="${!facilities.hasNext()} ? disabled">
+                            <a th:href="@{'/facility?keyword=' + ${keyword} + '&orderByBuilding=' + ${orderByBuilding} + '&page=' + ${facilities.getNumber() + 1}}" class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
     </div>
 
 
@@ -85,15 +104,6 @@
                 type: "GET",
                 dataType: "json",
             }).done(function (data, status) {
-                // var nowReserveCnt = pos.prev().prev().prev().prev().children().eq(1);
-                // nowReserveCnt.text(data.dto.nowReserveCnt);
-                // var possibleReservation = pos.prev().prev().prev().children().eq(1);
-                // if (data.dto.possibleReservation) {
-                //     possibleReservation.text('예약가능');
-                // } else {
-                //     possibleReservation.text('예약불가능');
-                // }
-                // pos.prev().prev().prev().children().eq(2).remove();
                 pos.parent().parent().remove();
                 alert(data.statusCode + " "+ data.resultMsg);
             }).fail(function (data, status){

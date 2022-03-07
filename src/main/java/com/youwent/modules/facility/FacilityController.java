@@ -5,6 +5,9 @@ import com.youwent.modules.account.CurrentAccount;
 import com.youwent.modules.facility.dto.FacilityForm;
 import com.youwent.modules.facility.validator.FacilityFormValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -12,7 +15,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 import static com.youwent.modules.common.Url.*;
 
@@ -30,14 +32,20 @@ public class FacilityController {
         webDataBinder.addValidators(facilityFormValidator);
     }
 
+    // all facilities
     @GetMapping
-    public String facilities(@CurrentAccount Account account, Model model) {
-        // 여기서 존재하는 모든 facility를 보여줄 것. paging 처리해서
-        model.addAttribute(account);
-        // facilities를 model로 넘겨줄 것.
+    public String facilities(@CurrentAccount Account account, Model model,
+                             String keyword, String orderByBuilding,
+                             @PageableDefault(size = 10) Pageable pageable) {
+        keyword = facilityService.getKeyword(keyword);
+        orderByBuilding = facilityService.getOrderByBuilding(orderByBuilding);
+        // pageable : size, page, sort
         // 예약자는 제외하고 넘길 것.
-        List<Facility> facilities = facilityService.getFacilities(account);
+        Page<Facility> facilities = facilityService.getFacilitiesByKeyword(account, keyword, orderByBuilding, pageable);
         model.addAttribute("facilities", facilities);
+        model.addAttribute(account);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("orderByBuilding", orderByBuilding);
         return FACILITY + ROOT + INDEX;
     }
 
@@ -66,15 +74,5 @@ public class FacilityController {
         model.addAttribute(account);
         model.addAttribute(facility);
         return FACILITY + VIEW;
-    }
-
-    @GetMapping(SEARCH)
-    public String searchFacilities(@CurrentAccount Account account, String keyword, String orderByBuilding, Model model) {
-        // asc or desc
-        List<Facility> facilities = facilityService.getFacilitiesByKeyword(account, keyword, orderByBuilding);
-        // 현재 예약을 했다면, 예약한 user는 제외
-        model.addAttribute("facilities", facilities);
-        model.addAttribute(account);
-        return FACILITY + ROOT + INDEX;
     }
 }
