@@ -110,10 +110,10 @@ public class FacilityService {
     // async for schedule
     // 자정에 오늘 예약자들 쭉 업데이트
     public void updateAllNowReserveCnt() {
-        List<Facility> facilities = facilityRepository.findAll();
+        // reservation까지 모두 가져와 n+1 문제 해결
+        List<Facility> facilities = facilityRepository.findAllWithReservations();
         for (Facility facility : facilities) {
-            Long todayCnt = reservationRepository.findByReservationToday(facility);
-            facility.setNowReserveCnt(todayCnt == null ? 0 : Math.toIntExact(todayCnt));
+            facility.setNowReserveCnt(facility.getReservations().size());
         }
     }
 

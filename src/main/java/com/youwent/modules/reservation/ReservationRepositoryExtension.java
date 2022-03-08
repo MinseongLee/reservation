@@ -13,6 +13,5 @@ import java.time.LocalDateTime;
 public interface ReservationRepositoryExtension {
     Page<ReservationDto> findByKeywordOrderByAsc(Account account, String keyword, Pageable pageable);
     Page<ReservationDto> findByKeywordOrderByDesc(Account account, String keyword, Pageable pageable);
-    Long findByReservationToday(Facility facility);
     Long findByReservedDate(Facility facility, LocalDateTime reservedDate);
 }
