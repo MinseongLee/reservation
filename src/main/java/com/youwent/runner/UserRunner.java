@@ -1,8 +1,11 @@
 package com.youwent.runner;
 
 
+import com.youwent.modules.account.Account;
 import com.youwent.modules.account.AccountRepository;
 import com.youwent.modules.account.AccountService;
+import com.youwent.modules.account.UserType;
+import com.youwent.modules.account.dto.AccountDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -27,14 +30,5 @@ public class UserRunner implements ApplicationRunner {
 //        accountService.login(accountService.processNewAccount(admin));
 //        Account byEmail = accountRepository.findByEmail("dexlee@deali.net");
 //        byEmail.setUserType(UserType.ADMIN);
-
-        // 일반 유저
-//        AccountDto user = new AccountDto();
-//        user.setEmail("diakswl11@gmail.com");
-//        user.setName("dexter");
-//        user.setPhone("01057642424");
-//        user.setPassword("dexter1234");
-//        Account account = accountService.processNewAccount(user);
-//        accountService.login(account);
     }
 }

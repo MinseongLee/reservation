@@ -5,7 +5,8 @@
     <div class="container">
         <h2>덱스터예약</h2>
         <p>
-            잘못된 요청입니다. <br/>
+            <span>에러메세지: </span>
+            <span th:text="${errorMessage}"></span> <br/>
         </p>
         <p>
             <a th:href="@{/}" class="btn btn-primary my-2">첫 페이지로 이동</a>
