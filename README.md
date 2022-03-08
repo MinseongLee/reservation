@@ -5,9 +5,28 @@
 * java 8, springboot 2.6.4, mysql 8.x, spring data jpa, maven
 * spring security, modelmapper, querydsl, junit, lombok, spring scheduler
 
+### 실행 방법
+1. maven compile, 새로고침 등
+2. Edit configurations 클릭(오른쪽 위에 실행버튼 옆에 클릭)
+3. \+ 버튼 클릭 후 springboot 클릭
+4. name : application.yml
+- configuration / main class : com.youwent.ReservationApplication
+- 나머지는 디폴트 설정 사용
+5. name : application-dev.yml
+- configuration / main class : com.youwent.ReservationApplication
+- configuration / active profile : dev
+이렇게 총 두 개 파일 만들어 로컬일 때와 dev일 때의 환경을 분리
+6. create database
+7. CREATE DATABASE `reservation` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
+8. CREATE DATABASE `reservationtest` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
+- test 디비와 local 디비를 분리
+9. admin 유저 생성은 runner/UserRunner 에서 주석 풀고 생성가능.
+- 단 현재 ddl이 update이므로, 한 번 생성 한 후 주석 처리. (아니면 create-drop으로 변경해서 사용)
+10. mysql user : root, pwd : 1111 
+
 ### git 전략
 * master, develop, feature, hotfix, release
-* master : 실 서버
+* master : 실서버
 * develop : 개발
 * feature : 기능
 * 현재 개발 단계므로, feature에서 개발 후 develop에 merge 후 관리.
@@ -27,6 +46,8 @@
 * Account <- Facility (단방향)[nTom]
 * Account <- Reservation (단방향)[1tom]
 * Facility <-> Reservation (양방향)[1tom]
+- 예약관리(검색 등)는 reservation 모듈을 통해서 관리하고,
+- 시설관리(검색 등)는 facility 모듈을 통해서 관리하도록 설계
 
 ### 로그인, 로그아웃 구현
 * spring security를 활용
@@ -67,6 +88,10 @@
 * url keyword를 상수로 한 클래스에서 사용
 * json 응답에 CustomResponse를 만들어 응답
 * local, test, dev 환경 구성.
+
+### 에러처리
+* modules/common/CustomErrorController 를 생성하여 에러메세지 리턴
+* 비동기 처리에서 에러 발생 시 알림 메세지(data.responseJSON.message)를 리턴
 
 
 ### references
