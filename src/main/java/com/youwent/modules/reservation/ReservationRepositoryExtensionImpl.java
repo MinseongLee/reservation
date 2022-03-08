@@ -59,20 +59,6 @@ public class ReservationRepositoryExtensionImpl extends QuerydslRepositorySuppor
         return new PageImpl<>(results.getResults(), pageable, results.getTotal());
     }
 
-    // 오늘 기준으로 예약자 모두 가져올 것. status=true
-    @Override
-    public Long findByReservationToday(Facility facility) {
-        QReservation reservation = QReservation.reservation;
-        JPQLQuery<Long> query = from(reservation).where(reservation.facility.eq(facility)
-                .and(reservation.status.isTrue())
-                .and(reservation.reservedDate.eq(LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0)))))
-                .select(reservation.facility.count())
-                .groupBy(reservation.facility)
-                .distinct()
-                .innerJoin(reservation.facility, QFacility.facility);
-        return query.fetchOne();
-    }
-
     @Override
     public Long findByReservedDate(Facility facility, LocalDateTime reservedDate) {
         QReservation reservation = QReservation.reservation;

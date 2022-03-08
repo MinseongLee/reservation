@@ -42,6 +42,7 @@ public class FacilityRepositoryExtensionImpl extends QuerydslRepositorySupport i
         return new PageImpl<>(results.getResults(), pageable, results.getTotal());
     }
 
+    // 오늘 기준으로 예약자 모두 가져올 것. status=true
     @Override
     public List<Facility> findAllWithReservations() {
         QFacility facility = QFacility.facility;
