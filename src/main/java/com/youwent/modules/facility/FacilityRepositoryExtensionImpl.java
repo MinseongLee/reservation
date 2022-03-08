@@ -9,6 +9,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 import java.util.Objects;
 
 public class FacilityRepositoryExtensionImpl extends QuerydslRepositorySupport implements FacilityRepositoryExtension {
@@ -36,6 +40,15 @@ public class FacilityRepositoryExtensionImpl extends QuerydslRepositorySupport i
         JPQLQuery<Facility> pageableQuery = Objects.requireNonNull(getQuerydsl()).applyPagination(pageable, query);
         QueryResults<Facility> results = pageableQuery.fetchResults();
         return new PageImpl<>(results.getResults(), pageable, results.getTotal());
+    }
+
+    @Override
+    public List<Facility> findAllWithReservations() {
+        QFacility facility = QFacility.facility;
+        JPQLQuery<Facility> query = from(facility).where(facility.reservations.any().status.isTrue()
+                .and(facility.reservations.any().reservedDate.eq(LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0)))))
+                .innerJoin(facility.reservations, QReservation.reservation).fetchJoin();
+        return query.fetch();
     }
 
     // common method

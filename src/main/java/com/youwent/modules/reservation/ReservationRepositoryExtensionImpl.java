@@ -69,8 +69,7 @@ public class ReservationRepositoryExtensionImpl extends QuerydslRepositorySuppor
                 .select(reservation.facility.count())
                 .groupBy(reservation.facility)
                 .distinct()
-                // fetchJoin() 데이터를 한 번에 조회 n + 1 문제 해결
-                .innerJoin(reservation.facility, QFacility.facility).fetchJoin();
+                .innerJoin(reservation.facility, QFacility.facility);
         return query.fetchOne();
     }
 
