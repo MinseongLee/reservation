@@ -20,9 +20,16 @@
 7. CREATE DATABASE `reservation` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
 8. CREATE DATABASE `reservationtest` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
 - test 디비와 local 디비를 분리
-9. admin 유저 생성은 runner/UserRunner 에서 주석 풀고 생성가능.
-- 단 현재 ddl이 update이므로, 한 번 생성 한 후 주석 처리. (아니면 create-drop으로 변경해서 사용)
-10. mysql user : root, pwd : 1111 
+9. mysql user : root, pwd : 1111 (변경해서 사용가능)
+10. application.yml : - ddl: create-drop
+11. runner/UserRunner
+- 테스트 유저, 시설, 예약 자동생성
+12. test admin
+- id : dexlee@dexter.com
+- pwd : dexter1234
+13. test user
+- id : dexter@dexter.com
+- pwd : dexter1234
 
 ### git 전략
 * master, develop, feature, hotfix, release
@@ -61,7 +68,7 @@
 * @CurrentAccount : user principal 표현
 * 일반 유저 생성, 수정, 삭제
 * 어드민 타입은 UI에서 선택불가.
-* UI에서 유저 생성 후, 어드민 타입(UserType.ADMIN) 변경 혹은 runner로 어드민 유저 생성 후 사용.
+* UI에서 유저 생성 후, 어드민 타입(UserType.ADMIN) 변경 혹은 sql로 어드민 유저 생성 후 사용.
 
 ### 시설 관리 
 * 관리자만 시설 생성, 수정, 삭제할 수 있음

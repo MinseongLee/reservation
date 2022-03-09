@@ -16,8 +16,8 @@ spring:
 
   jpa:
     hibernate:
-      # validation - 운영시 : entity들과 db 내용과 맞는지 검증 create-drop
-      ddl-auto: update
+      # validate - 운영
+      ddl-auto: create-drop
     properties:
       hibernate:
         format_sql: true # table info in console
@@ -25,20 +25,17 @@ spring:
 #    database-platform: org.hibernate.dialect.MySQLDialect
   profiles:
     active: local
-  devtools:
-    livereload:
-      enabled: true
 
 # value in table
 logging:
   level:
     org:
       hibernate:
-#        SQL: DEBUG
         type:
           descriptor:
             sql:
               BasicBinder: TRACE
+
 # 개발 환경에 따라 다른 host에 접근할 수 있도록.
 app:
   host: http://localhost:8080
