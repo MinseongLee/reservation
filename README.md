@@ -1,16 +1,16 @@
 # 예약 관리 시스템
 
 ### 사용한 기술
-* front-end : html, jquery, bootstrap
-* front package manager : npm
-* template engine : thymeleaf
-* language : java 8
-* Database : mysql 8.x
-* project manager : maven
-* framework : springboot 2.6.4
-* dependencies : spring data jpa, spring security, modelmapper, querydsl, junit, lombok, spring scheduler
+* Front-End : HTML, Jquery, Bootstrap
+* Front Package Manager : npm
+* Template Engine : Thymeleaf
+* Language : Java 8
+* Database : MySQL 8.x
+* Project Manager : Maven
+* Framework : Springboot 2.6.4
+* Dependencies : Spring Data Jpa, Spring Security, Modelmapper, Querydsl, Junit, Lombok, Spring Scheduler
 
-### API end point
+### API
 1. 회원가입 양식
 - url: GET /signup
 - request: 
@@ -21,14 +21,14 @@
 - request:
   
 
-    {
-      "accountDto": {
-        "name": "dexter",
-        "email": "dexter@dexter.com",
-        "password": "dexter1234",
-        "phone": "01044445555"
+      {
+        "accountDto": {
+          "name": "dexter",
+          "email": "dexter@dexter.com",
+          "password": "dexter1234",
+          "phone": "01044445555"
+        }
       }
-    }
 - response: index.html
 
 3. 회원가입완료(이메일 토큰 검증)
@@ -241,28 +241,28 @@
       }
 
 ### 실행 방법(intelliJ 기준)
-0. maven compile
-1. Edit configurations 클릭(오른쪽 위에 실행버튼 옆에 클릭)
-2. \+ 버튼 클릭 후 springboot 클릭
-3. name : application.yml
+1. maven compile for querydsl
+2. Edit configurations 클릭(오른쪽 위에 실행버튼 옆에 클릭)
+3. \+ 버튼 클릭 후 springboot 클릭
+4. name : application.yml
 - configuration / main class : com.youwent.ReservationApplication
 - 나머지는 디폴트 설정 사용
-4. name : application-dev.yml
+5. name : application-dev.yml
 - configuration / main class : com.youwent.ReservationApplication
 - configuration / active profile : dev
 이렇게 총 두 개 파일 만들어 로컬일 때와 dev일 때의 환경을 분리
-5. create database
-6. CREATE DATABASE `reservation` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
-7. CREATE DATABASE `reservationtest` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
+6. create database
+7. CREATE DATABASE `reservation` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
+8. CREATE DATABASE `reservationtest` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
 - test 디비와 local 디비를 분리
-8. mysql user : root, pwd : 1111 (변경해서 사용가능)
-9. application.yml : - ddl: create-drop
-10. runner/UserRunner
+9. mysql user : root, pwd : 1111 (변경해서 사용가능)
+10. application.yml : - ddl: create-drop
+11. runner/UserRunner
 - 테스트 유저, 시설, 예약 자동생성
-11. test admin
+12. test admin
 - id : dexlee@dexter.com
 - pwd : dexter1234
-12. test user
+13. test user
 - id : dexter@dexter.com
 - pwd : dexter1234
 
