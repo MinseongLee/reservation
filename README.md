@@ -241,6 +241,7 @@
       }
 
 ### 실행 방법(intelliJ 기준)
+0. maven compile
 1. Edit configurations 클릭(오른쪽 위에 실행버튼 옆에 클릭)
 2. \+ 버튼 클릭 후 springboot 클릭
 3. name : application.yml
