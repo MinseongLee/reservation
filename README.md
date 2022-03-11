@@ -216,7 +216,7 @@
         }
       }
 21. 예약 리스트
-- url: /reservation
+- url: GET /reservation
 - request: @CurrentAccount
   
       {
@@ -226,7 +226,7 @@
 - response: reservation/index.html
 
 22. 예약 취소
-- url: /reservation/id
+- url: PUT /reservation/id
 - request:
   
       { 
