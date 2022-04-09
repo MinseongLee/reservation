@@ -8,7 +8,7 @@
 * Database : MySQL 8.x
 * Project Manager : Maven
 * Framework : Springboot 2.6.4
-* Dependencies : Spring Data Jpa, Spring Security, Modelmapper, Querydsl, Junit, Lombok, Spring Scheduler
+* Dependencies : Spring Data Jpa, Spring Security, Modelmapper, Querydsl, Junit, H2
 
 ### API
 1. 회원가입 양식
@@ -254,7 +254,8 @@
 6. create database
 7. CREATE DATABASE `reservation` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
 8. CREATE DATABASE `reservationtest` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
-- test 디비와 local 디비를 분리
+- test 디비와 dev 디비를 분리
+- local 디비는 h2를 사용
 9. mysql user : root, pwd : 1111 (변경해서 사용가능)
 10. application.yml : - ddl: create-drop
 11. runner/UserRunner
@@ -291,7 +292,7 @@
 ### 로그인, 로그아웃 구현
 * spring security를 활용
   * SecurityConfig 설정
-* 토큰활용
+* 토큰, 시리즈활용
 * 비밀번호 인코딩
 * 이메일 인증 
   * smtp
@@ -299,18 +300,17 @@
   * dev : 실제 이메일 보내기
 * @CurrentAccount : user principal 표현
 * 일반 유저 생성, 수정, 삭제
-* 어드민 타입은 UI에서 선택불가.
-* UI에서 유저 생성 후, 어드민 타입(UserType.ADMIN) 변경 혹은 sql로 어드민 유저 생성 후 사용.
+* 어드민 타입은 UI에서 선택불가
 
 ### 시설 관리 
 * 관리자만 시설 생성, 수정, 삭제할 수 있음
-* 유저는 확인만 가능.
+* 유저는 확인 및 예약만 가능.
 * 시설 검색, 정렬은 둘 다 가능
 * paging 처리
 
 ### 예약 관리
 * 관리자는 예약할 수 없음
-* 유저는 예약 및 취소 가능
+* 유저는 예약 취소 및 예약 관리 가능
 * 유저는 날짜를 선택하여 예약할 수 있음
 * 예약 업데이트 동기화
 * 예약관리창에서 시설 검색, 정렬 가능
