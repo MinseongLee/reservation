@@ -2,11 +2,11 @@ server:
   port: 8080
 
 spring:
-  datasource:
+#  datasource:
     # ?autoReconnect=true
-    url: jdbc:mysql://localhost:3306/reservation
-    username: root
-    password: 1111
+#    url: jdbc:mysql://localhost:3306/reservation
+#    username: root
+#    password: 1111
   #    dbcp2:
   # true일 경우 커넥션 풀에서 커넥션을 가져올 때 커넥션이 유효한지의 여부를 검사한다.
 #      test-on-borrow: true
