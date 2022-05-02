@@ -22,6 +22,8 @@ public class ReservationService {
     }
 
     public Reservation getReservation(Long id) {
+        // 여기에서 findById로 가져오면 eager이라면 그 즉시 연관관계 데이터가 항상 같이 조회된다.
+        // 이 문제를 해결하려면 lazy로 놓고, 해당하는 값을 가져올 때 직접 조인을 통해 가져와야한다.
         Optional<Reservation> reservationById = reservationRepository.findById(id);
         if (!reservationById.isPresent()) {
             throw new IllegalArgumentException("해당하는 예약이 존재하지 않습니다.");

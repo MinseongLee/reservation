@@ -6,6 +6,7 @@ import com.youwent.modules.facility.Facility;
 import lombok.*;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
@@ -20,10 +21,10 @@ public class Reservation extends BaseEntity {
     private LocalDateTime createdDate;
 
     // 시설 id, user id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Account account;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Facility facility;
 
     private void addAccount(Account account) {
